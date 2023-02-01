@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Contract</title>
+    <link rel="stylesheet" href="Mood.css">
+</head>
+<body>
+    <div class="header">
+        <h2>Hello there, welcome to the Mood Page.</h2>
+        <h3><i>set your mood of the day !!!</i></h3>
+    </div>
+
+    <div class="setter">
+        <label for="mood">Type in your mood :</label>
+        <input type="text" name="mood" id="mood">
+        <button onclick="setMood()">SUBMIT</button>
+    </div>
+    <div>
+        <button onclick="getMood()">DISPLAY</button>
+    </div>
+    <div>
+        <h3 id="displayMood"></h3>
+    </div>
+
+    <script charset="utf-8"
+            src="https://cdn.ethers.io/scripts/ethers-v4.min.js"
+            type="text/javascript">
+    </script> 
+
+    <script>
+        window.ethereum.enable();
+        var provider = new ethers.providers.Web3Provider(web3.currentProvider, "goerli");
+
+        var contractAddress = "0x551806Aa7C04fEcf82f1A42aF183d0Ed629575c7";
+        var ABI = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_mood",
+                        "type": "string"
+                    }
+                ],
+                "name": "setMood",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getMood",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ]
+
+        var MoodContract;
+        var signer;
+
+        provider.listAccounts().then((accounts) => {
+            signer = provider.getSigner(accounts[0]);
+            MoodContract = new ethers.Contract(contractAddress, ABI, signer);
+        })
+
+        async function setMood(){
+            let val = document.getElementById("mood").value;
+            let setPromise = MoodContract.setMood(val);
+            await setPromise;
+        }
+
+        async function getMood(){
+            let getPromise = MoodContract.getMood();
+            var display = await getPromise
+            console.log(display);
+            let val = document.getElementById("displayMood");
+            val.textContent = display;
+        }
+
+    </script>
+
+
+    
+</body>
+</html>

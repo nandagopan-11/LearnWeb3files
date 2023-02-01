@@ -34,7 +34,7 @@
             web3.currentProvider, //metamask
             "goerli"
         ); //creating a Web3Provider
-        var ContactAddress = "0x9A8D9Cb7D7E2aFa06F95EB1dD9B006876cb88228";
+        var ContractAddress = "0x9A8D9Cb7D7E2aFa06F95EB1dD9B006876cb88228";
         var ABI = [
             {
                 "inputs": [
@@ -70,7 +70,7 @@
         provider.listAccounts().then(function(accounts) { //getting the accounts in my metamask
             signer = provider.getSigner(accounts[0]); //choosing the signer out of all my accounts
             SolTrialContract = new ethers.Contract( // creating an instace of a contract with details of the contract that we've deployed
-                ContactAddress,
+                ContractAddress,
                 ABI,
                 signer
             );
