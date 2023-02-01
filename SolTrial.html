@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolTrialContract</title>
+</head>
+<body>
+    <div>
+        <h1>Hi there, welcome to theApp.</h1>
+        <h3>We'd like to print out what you'd wanna say!</h3>
+        <div class="inParam">
+            <label for="in-Val"> Tell us what you'd wanna say : </label>
+            <input type="text" id="in-Val">
+            <button class="btn-act" onclick="setVal()">SUBMIT</button>
+        </div>
+        <div class="callParm">
+            <button class="btn-act" onclick="getVal()">DISPLAY</button>
+        </div>
+    </div>
+    <div class="displayParam">
+        <h2 id="get-Val"> </h2>
+    </div>
+
+    <script charset="utf-8"
+            src="https://cdn.ethers.io/scripts/ethers-v4.min.js" // to use ethers.js
+            type="text/javascript">
+    </script> 
+
+    <script>
+        window.ethereum.enable(); //to see if the window has a wallet installed
+        var provider = new ethers.providers.Web3Provider(
+            web3.currentProvider, //metamask
+            "goerli"
+        ); //creating a Web3Provider
+        var ContactAddress = "0x9A8D9Cb7D7E2aFa06F95EB1dD9B006876cb88228";
+        var ABI = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_inVal",
+                        "type": "string"
+                    }
+                ],
+                "name": "setVal",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getVal",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ]
+        
+        var SolTrialContract;
+        var signer;
+            
+        provider.listAccounts().then(function(accounts) { //getting the accounts in my metamask
+            signer = provider.getSigner(accounts[0]); //choosing the signer out of all my accounts
+            SolTrialContract = new ethers.Contract( // creating an instace of a contract with details of the contract that we've deployed
+                ContactAddress,
+                ABI,
+                signer
+            );
+        });
+
+        async function getVal(){
+            getValPromise = SolTrialContract.getVal(); //getVal from the ABI
+            var outValue = await getValPromise;
+            console.log(outValue);
+            let disp = document.getElementById("get-Val");
+            disp.textContent = outValue;
+            
+        } 
+
+        async function setVal(){
+            let inValue = document.getElementById("in-Val").value;
+            setValPromise = SolTrialContract.setVal(inValue);
+            await setValPromise;
+        }
+		
+			
+    </script>
+</body>
+</html>
