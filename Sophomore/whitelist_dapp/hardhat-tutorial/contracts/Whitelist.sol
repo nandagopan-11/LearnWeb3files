@@ -15,5 +15,24 @@ contract Whitelist {
     constructor(uint8 _maxNumOfWhitelistAddress) {
         maxNumOfWhitelistAddress =  _maxNumOfWhitelistAddress;
     }
+
+    //function to add an address to the Whitelist
+    function addToWHitelist() public returns (string memory) {
+        
+        //check if the caller's address is already whitelisted
+        require(!whitelistedAddress[msg.sender],"You're already whitelisted");
+
+        //checking if the whitelist limit has been reached
+        require(numOfAddressesWhitelisted<maxNumOfWhitelistAddress, "Sorry, whitelist limit has been reached");
+
+        //adding the caller's address to the mapping and setting the status to be true
+        whitelistedAddress[msg.sender] = true;
+
+        //increasing the num off addresses whitelisted after adding te callers address
+        numOfAddressesWhitelisted += 1;
+
+        return "Added to whitelist!";
+
+    }
 }
 
