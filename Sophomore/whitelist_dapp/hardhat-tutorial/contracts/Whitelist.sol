@@ -28,7 +28,7 @@ contract Whitelist {
         //adding the caller's address to the mapping and setting the status to be true
         whitelistedAddress[msg.sender] = true;
 
-        //increasing the num off addresses whitelisted after adding te callers address
+        //increasing the num of addresses whitelisted after adding the caller's address
         numOfAddressesWhitelisted += 1;
 
         return "Added to whitelist!";

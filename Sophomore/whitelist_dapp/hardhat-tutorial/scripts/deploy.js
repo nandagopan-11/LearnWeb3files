@@ -1,32 +1,26 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
-const hre = require("hardhat");
 
-async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+//importing a special verson of ethers from Hardhat
+const {ethers} = require("hardhat");
 
-  const lockedAmount = hre.ethers.utils.parseEther("0.001");
+async function main(){
+  
+  //creating an istance of Whitelist.sol and storing it in 'whitelistContract'
+  const whitelistContract = await ethers.getContractFactory("Whitelist");
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  //calling the deploy method with constructor argument
+  const deployedWhitelistContract = await whitelistContract.deploy(15);
 
-  await lock.deployed();
+  //waiting till the contract gets deployed
+  await deployedWhitelistContract.deployed();
 
-  console.log(
-    `Lock with ${ethers.utils.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+  //printing ut the address of the depoyed contract
+  console.log("Whitelist contract address : " , deployedWhitelistContract.address);
+
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
+main()
+.then(() => process.exit(0))
+.catch((error) => {
   console.error(error);
-  process.exitCode = 1;
+  process.exit(1);
 });
